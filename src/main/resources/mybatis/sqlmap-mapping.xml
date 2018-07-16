@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.dataintegration.interfaces">
+
+    <cache/>
+    <select id="queryUser" resultType="user">
+        SELECT * FROM user
+    </select>
+    <!--article操作-->
+    <select id="queryArticle" resultType="article">
+        SELECT articleid,title,content,articletime,name,state FROM article
+    </select>
+    <insert id="insertArticle" parameterType="article">
+        INSERT INTO article(title,content,name,state) VALUES (#{title},#{content},#{name},#{state})
+    </insert>
+    <delete id="deleteArticle" parameterType="String">
+        DELETE FROM article WHERE articleid=#{_parameter}
+    </delete>
+    <update id="updateArticle" parameterType="article">
+        UPDATE article SET title=#{title},content=#{content},name=#{name},state=#{state} WHERE articleid=#{articleid}
+    </update>
+    <!--登陆-->
+    <select id="userLogin" parameterType="HashMap" resultType="user">
+        SELECT userid,username,password,useremail FROM user WHERE username=#{username} AND password=#{password}
+    </select>
+</mapper>

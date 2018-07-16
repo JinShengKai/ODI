@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.css.dataintegration.dao.BaseInfoDao">
+
+    <resultMap id="baseInfo" type="com.css.dataintegration.entity.BaseInfo">
+        <result property="name" column="name"/>
+        <result property="appId" column="app_id"/>
+        <result property="taskCount" column="task_count"/>
+        <result property="bizDate" column="bizDate"/>
+        <result property="statusNotRunning" column="status_not_running"/>
+        <result property="statusWaiting" column="status_waiting"/>
+        <result property="statusWaitingResource" column="status_waiting_resource"/>
+        <result property="statusRunning" column="status_running"/>
+        <result property="statusFailed" column="status_failed"/>
+        <result property="statusSucceed" column="status_succeed"/>
+        <result property="taskBegin" column="task_begin"/>
+        <result property="taskFinished" column="task_finished"/>
+        <result property="taskWorkingTime" column="task_working_time"/>
+    </resultMap>
+    <!-- 查找 -->
+    <select id="findAllBaseMessage" resultMap="baseInfo" parameterType="java.sql.Timestamp">
+      select a.name
+            ,jg.app_id
+            ,jg.bizDate
+            ,jg.task_count
+            ,jg.status_not_running
+            ,jg.status_waiting
+            ,jg.status_waiting_resource
+            ,jg.status_running
+            ,jg.status_failed
+            ,jg.status_succeed
+            ,jg.task_begin
+            ,jg.task_finished
+            ,jg.task_finished-jg.task_begin as task_working_time
+        from phoenix_app_config a
+        left outer join (
+       select task_inst.app_id
+             ,task_inst.bizdate
+             ,COUNT(task_inst.app_id) as task_count
+       		 ,sum(case when task_inst.status=1 then 1 else 0 end) as status_not_running
+       		 ,sum(case when task_inst.status=2 then 1 else 0 end) as status_waiting
+       		 ,sum(case when task_inst.status=3 then 1 else 0 end) as status_waiting_resource
+       		 ,sum(case when task_inst.status=4 then 1 else 0 end) as status_running
+       		 ,sum(case when task_inst.status=5 then 1 else 0 end) as status_failed
+       		 ,sum(case when task_inst.status=6 then 1 else 0 end) as status_succeed
+       		 ,min(begin_run_time) as task_begin
+       		 ,max(finish_time) as task_finished
+       	 from phoenix_task_inst task_inst
+       	<where>
+            task_inst.task_type in ('0','5')
+            <if test="gmtDate != null " >
+            and     gmtdate = #{gmtDate}
+            </if>
+        </where>
+
+       	group by app_id) jg
+    on a.app_id=jg.app_id
+ where upper(a.name) like 'SC_J%T' or upper(a.name) like 'SC_J%_GSZJ'
+ order by a.name;
+    </select>
+
+
+
+
+</mapper>
