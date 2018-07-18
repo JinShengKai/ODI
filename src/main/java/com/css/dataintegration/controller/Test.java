@@ -14,6 +14,7 @@ public class Test {
     public static void main(String[] args) throws ParseException {
 
         Date date = new Date();
+        System.out.println();
         SimpleDateFormat simpleDateFormatOutputGmtdate = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat simpleDateFormatInputGmtdate = new SimpleDateFormat("yyyyMMdd");
         //String datetime = simpleDateFormat.format(date);

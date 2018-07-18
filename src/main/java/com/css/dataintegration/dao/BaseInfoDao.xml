@@ -6,8 +6,8 @@
     <resultMap id="baseInfo" type="com.css.dataintegration.entity.BaseInfo">
         <result property="name" column="name"/>
         <result property="appId" column="app_id"/>
+        <result property="bizDate" column="biz_date"/>
         <result property="taskCount" column="task_count"/>
-        <result property="bizDate" column="bizDate"/>
         <result property="statusNotRunning" column="status_not_running"/>
         <result property="statusWaiting" column="status_waiting"/>
         <result property="statusWaitingResource" column="status_waiting_resource"/>
@@ -16,28 +16,29 @@
         <result property="statusSucceed" column="status_succeed"/>
         <result property="taskBegin" column="task_begin"/>
         <result property="taskFinished" column="task_finished"/>
-        <result property="taskWorkingTime" column="task_working_time"/>
+        <result property="taskWorkingTime" column="task_working_time"  />
+
     </resultMap>
     <!-- 查找 -->
     <select id="findAllBaseMessage" resultMap="baseInfo" parameterType="java.sql.Timestamp">
-      select a.name
-            ,jg.app_id
-            ,jg.bizDate
-            ,jg.task_count
-            ,jg.status_not_running
-            ,jg.status_waiting
-            ,jg.status_waiting_resource
-            ,jg.status_running
-            ,jg.status_failed
-            ,jg.status_succeed
-            ,jg.task_begin
-            ,jg.task_finished
-            ,jg.task_finished-jg.task_begin as task_working_time
+      select a.name as name
+            ,jg.app_id as app_id
+            ,jg.bizdate as biz_date
+            ,jg.task_count as task_count
+            ,jg.status_not_running as status_not_running
+            ,jg.status_waiting as status_waiting
+            ,jg.status_waiting_resource as status_waiting_resource
+            ,jg.status_running as status_running
+            ,jg.status_failed as status_failed
+            ,jg.status_succeed as status_succeed
+            ,jg.task_begin as task_begin
+            ,jg.task_finished as task_finished
+            ,to_char(jg.task_finished-jg.task_begin,'dd天HH:mm:ss') as task_working_time
         from phoenix_app_config a
         left outer join (
        select task_inst.app_id
              ,task_inst.bizdate
-             ,COUNT(task_inst.app_id) as task_count
+             ,COUNT(task_inst.task_id) as task_count
        		 ,sum(case when task_inst.status=1 then 1 else 0 end) as status_not_running
        		 ,sum(case when task_inst.status=2 then 1 else 0 end) as status_waiting
        		 ,sum(case when task_inst.status=3 then 1 else 0 end) as status_waiting_resource
@@ -47,14 +48,12 @@
        		 ,min(begin_run_time) as task_begin
        		 ,max(finish_time) as task_finished
        	 from phoenix_task_inst task_inst
-       	<where>
+        WHERE
             task_inst.task_type in ('0','5')
-            <if test="gmtDate != null " >
-            and     gmtdate = #{gmtDate}
-            </if>
-        </where>
 
-       	group by app_id) jg
+            and     task_inst.gmtdate = #{gmtDate}
+
+       	group by app_id,bizdate) jg
     on a.app_id=jg.app_id
  where upper(a.name) like 'SC_J%T' or upper(a.name) like 'SC_J%_GSZJ'
  order by a.name;

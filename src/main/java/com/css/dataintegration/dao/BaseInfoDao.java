@@ -7,5 +7,5 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public interface BaseInfoDao {
-    public List<BaseInfo> findAllBaseMessage(@Param(value="gmtDate")Timestamp gmtDate);
+     List<BaseInfo> findAllBaseMessage(@Param(value="gmtDate")Timestamp gmtDate);
 }

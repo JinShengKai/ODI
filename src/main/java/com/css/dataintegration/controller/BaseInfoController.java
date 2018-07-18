@@ -20,18 +20,30 @@ import java.util.List;
 @RequestMapping(value = "/baseinfo")
 public class BaseInfoController extends BasicController {
 
-    @RequestMapping(value = "taskinfo")
-    public String findAllBaseMessage(ModelMap model, HttpServletRequest request) {
-        String gmtdate = request.getParameter("gmtdate").replaceAll("[^0-9]", "");
+    @RequestMapping(value = "task_Info")
+    public String findAllBaseMessage(ModelMap model, HttpServletRequest request) throws ParseException {
+
+       // System.out.println(timestamp);
+
+        List<BaseInfo> baseInfoList = baseInfoService.findAllBaseMessage(ConverStringToTimestamp.getTodayTimestamp());
+        model.addAttribute("baseInfoList", baseInfoList);
+        return "baseinfo";
+    }
+    @RequestMapping(value = "gmt_Info")
+    public String findProjectBaseMessage(ModelMap model, HttpServletRequest request) {
+        String gmtdate = null;
+        if(request.getParameter("gmtdate").replaceAll("[^0-9]]","") != null){
+            gmtdate=request.getParameter("gmtdate").replaceAll("[^0-9]", "");
+        }
+
         Timestamp timestamp = ConverStringToTimestamp.convert(gmtdate);
 
 
 
-        //System.out.println(timestamp);
+        // System.out.println(timestamp);
 
         List<BaseInfo> baseInfoList = baseInfoService.findAllBaseMessage(timestamp);
         model.addAttribute("baseInfoList", baseInfoList);
         return "baseinfo";
     }
-
 }

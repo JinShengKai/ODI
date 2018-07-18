@@ -1,15 +1,18 @@
 package com.css.dataintegration.entity;
 
+
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+
 import java.sql.Timestamp;
-import java.util.Date;
+
 
 public class BaseInfo {
     private String project;
     private String name;
-    private Timestamp bizDate;
     private String appId;
+    private Timestamp bizDate;
     private String taskCount;
     private String statusNotRunning;
     private String statusWaiting;
@@ -17,9 +20,11 @@ public class BaseInfo {
     private String statusRunning;
     private String statusFailed;
     private String statusSucceed;
+
     private Timestamp taskBegin;
     private Timestamp taskFinished;
-    private Timestamp taskWorkingTime;
+
+    private String taskWorkingTime;
 
     public String getProject() {
         return project;
@@ -37,21 +42,20 @@ public class BaseInfo {
         this.name = name;
     }
 
-    @JsonFormat(pattern = "yyyyMMdd", timezone = "GMT+8")
-    public Timestamp getBizDate() {
-        return bizDate;
-    }
-
-    public void setBizDate(Timestamp bizDate) {
-        this.bizDate = bizDate;
-    }
-
     public String getAppId() {
         return appId;
     }
 
     public void setAppId(String appId) {
         this.appId = appId;
+    }
+    @JsonFormat(pattern="yyyy-MM-dd")
+    public Timestamp getBizDate() {
+        return bizDate;
+    }
+
+    public void setBizDate(Timestamp bizDate) {
+        this.bizDate = bizDate;
     }
 
     public String getTaskCount() {
@@ -117,7 +121,7 @@ public class BaseInfo {
     public void setTaskBegin(Timestamp taskBegin) {
         this.taskBegin = taskBegin;
     }
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+
     public Timestamp getTaskFinished() {
         return taskFinished;
     }
@@ -125,12 +129,13 @@ public class BaseInfo {
     public void setTaskFinished(Timestamp taskFinished) {
         this.taskFinished = taskFinished;
     }
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    public Timestamp getTaskWorkingTime() {
+
+
+    public String getTaskWorkingTime() {
         return taskWorkingTime;
     }
 
-    public void setTaskWorkingTime(Timestamp taskWorkingTime) {
+    public void setTaskWorkingTime(String taskWorkingTime) {
         this.taskWorkingTime = taskWorkingTime;
     }
 }

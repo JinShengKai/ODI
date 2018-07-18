@@ -1,5 +1,6 @@
 package com.css.dataintegration.util;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +25,20 @@ public class ConverStringToTimestamp {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        //System.out.println(timestamp);
+        //System.out.println(gmtdate);
         return timestamp;
+    }
+    public static  Timestamp getTodayTimestamp() throws ParseException {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String datetime=simpleDateFormat.format(date);
+
+        Timestamp  timestamp = new Timestamp(simpleDateFormat.parse(datetime).getTime());
+        return  timestamp;
+    }
+
+    public static void main(String[] args) throws ParseException {
+        System.out.println(getTodayTimestamp());
     }
 }

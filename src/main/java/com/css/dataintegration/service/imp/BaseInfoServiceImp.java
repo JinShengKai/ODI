@@ -23,6 +23,7 @@ public class BaseInfoServiceImp implements BaseInfoService{
 
     @Override
     public List<BaseInfo> findAllBaseMessage(Timestamp gmtDate){
+        //System.out.println("find all "+gmtDate);
         List<BaseInfo> baseInfoList =convertMessage(baseInfoDao.findAllBaseMessage(gmtDate));
 
         return baseInfoList;
